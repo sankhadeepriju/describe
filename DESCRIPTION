@@ -17,9 +17,16 @@ Depends:
     shinydashboard,
     shiny,
     DT,
-    survival,
+    readxl,
+    broom,
+    scales,
+    ggrepel,
     plotly,
-    blandr
+    bslib,
+    DescTools,
+    blandr,
+    caret,
+    survival
 Imports:
     dplyr,
     ggplot2,
