@@ -26,7 +26,8 @@ Depends:
     DescTools,
     blandr,
     caret,
-    survival
+    survival,
+    prodlim
 Imports:
     dplyr,
     ggplot2,
@@ -45,5 +46,6 @@ Imports:
     DescTools,
     blandr,
     caret,
-    survival
+    survival,
+    prodlim
 RoxygenNote: 7.2.3
