@@ -27,7 +27,9 @@ Depends:
     blandr,
     caret,
     survival,
-    prodlim
+    prodlim,
+    ipred,
+    recipes
 Imports:
     dplyr,
     ggplot2,
@@ -47,5 +49,7 @@ Imports:
     blandr,
     caret,
     survival,
-    prodlim
+    prodlim,
+    ipred,
+    recipes
 RoxygenNote: 7.2.3
