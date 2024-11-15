@@ -29,7 +29,8 @@ Depends:
     survival,
     prodlim,
     ipred,
-    recipes
+    recipes,
+    BlandAltmanLeh
 Imports:
     dplyr,
     ggplot2,
@@ -51,5 +52,6 @@ Imports:
     survival,
     prodlim,
     ipred,
-    recipes
+    recipes,
+    BlandAltmanLeh
 RoxygenNote: 7.2.3
