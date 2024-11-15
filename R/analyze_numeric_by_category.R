@@ -9,7 +9,7 @@
 #' @return A summary table
 #'
 #' @export analyze_numeric_by_category
-#' @name NumeriAnalysis
+#' @name numericalAnalysis_by_grouping
 
 
 

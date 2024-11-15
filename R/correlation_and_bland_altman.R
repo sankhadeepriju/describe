@@ -12,7 +12,7 @@
 #'
 #' @export correlation_test
 #' @export blandaltmanplot
-#' @name Corr_and_BlandAltman
+#' @name correlation_test_bland_altman
 
 
 

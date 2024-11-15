@@ -10,7 +10,7 @@
 #' @return PLOTS
 #'
 #' @export draw
-#' @name Plot
+#' @name draw
 
 
 

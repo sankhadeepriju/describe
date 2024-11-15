@@ -10,7 +10,7 @@
 #'
 #' @export analyze_category_by_category
 #' @importFrom dplyr "%>%"
-#' @name CategAnalysis
+#' @name categoricalAnalysis_by_grouping
 
 
 

@@ -1,4 +1,4 @@
-#' @title Correlation & Bland Altman Plot
+#' @title Logistic Regression Summary
 #'
 #' @description Creates a Logistic Regression Model; Preferred: categorical columns are formatter as factors with sub levels.
 #'
@@ -11,7 +11,7 @@
 #' @return A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance
 #'
 #' @export logistic_regression_summary
-#' @name LogisticRegression
+#' @name logistic_regression_summary
 
 
 
