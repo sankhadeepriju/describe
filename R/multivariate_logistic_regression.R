@@ -1,6 +1,6 @@
-#' @title Univariate Logistic Regression Summary
+#' @title Multivariate Logistic Regression Summary
 #'
-#' @description Creates multiple Single-Predictor Logistic Regression Model summary table;   Preferred: categorical columns are formatted as factors with sub levels.
+#' @description Creates a Multivariate Logistic Regression Model summary table;   Preferred: categorical columns are formatted as factors with sub levels.
 #'
 #' @param data A data set
 #' @param response_var (character; binary column's name)
@@ -8,10 +8,10 @@
 #' @param response_ref (reference level of the binary outcome)
 #' @param predictor_refs (named list of references of each categorical covariate)
 #'
-#' @return A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance. Returns the summary by building the model with outcome variable & exactly 1 predictor variable, at a time. For example, if 4 predictors are selected, a total of 4 models would be built, with each predictor entering once in a simple logistic model, Y ~ X. The summary henceforth presented would be of the 4 models built.
+#' @return A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance. Returns the summary by building the model with outcome variable & all the predictor variables.
 #'
-#' @export univariate_logistic_regression_summary
-#' @name univariate_logistic_regression_summary
+#' @export mv_logistic_regression_summary
+#' @name mv_logistic_regression_summary
 
 
 
@@ -19,7 +19,7 @@
 library(broom)
 library(dplyr)
 
-univariate_logistic_regression_summary <- function(data, response_var, predictor_vars, response_ref, predictor_refs) {
+mv_logistic_regression_summary <- function(data, response_var, predictor_vars, response_ref, predictor_refs) {
 
   # Convert response variable to binary with selected reference
   data[[response_var]] <- relevel(as.factor(data[[response_var]]), ref = response_ref)
