@@ -1,4 +1,4 @@
-#' @title Numerical Analysis
+#' @title Numerical Analysis by Grouping
 #'
 #' @description Reports Group Comparison like t-test/Mann WHitney/ANOVA/Kruskal-Wallis to compare mean difference across a Grouping Variable.
 #'
@@ -9,7 +9,7 @@
 #' @return A summary table
 #'
 #' @export analyze_numeric_by_category
-#' @name numericalAnalysis_by_grouping
+#' @name analyze_numeric_by_category
 
 
 

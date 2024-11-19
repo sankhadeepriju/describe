@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_function.R
 \name{draw}
 \alias{draw}
-\title{Scatter/Box/Bar Plot}
+\title{Scatter/Box/Bar Plot for Shiny}
 \arguments{
 \item{df}{A data set}
 

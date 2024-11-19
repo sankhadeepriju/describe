@@ -1,4 +1,4 @@
-#' @title Scatter/Box/Bar Plot
+#' @title Scatter/Box/Bar Plot for Shiny
 #'
 #' @description Plots using data, name of plot, & column names
 #'

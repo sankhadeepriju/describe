@@ -1,4 +1,4 @@
-#' @title Categorical Analysis
+#' @title Categorical Analysis by Grouping
 #'
 #' @description Reports Chi-sq/Fisher's Exact test to compare distribution of subjects across a Grouping Variable.
 #'
@@ -10,7 +10,7 @@
 #'
 #' @export analyze_category_by_category
 #' @importFrom dplyr "%>%"
-#' @name categoricalAnalysis_by_grouping
+#' @name analyze_category_by_category
 
 
 
