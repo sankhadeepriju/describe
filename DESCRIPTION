@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Package: describe
 Type: Package
 Title: RCT Analysis
@@ -29,7 +28,6 @@ Depends:
     blandr,
     caret,
     survival,
-    survminer,
     prodlim,
     ipred,
     recipes,
@@ -54,68 +52,8 @@ Imports:
     blandr,
     caret,
     survival,
-    survminer,
     prodlim,
     ipred,
     recipes,
     BlandAltmanLeh
-RoxygenNote: 7.2.3
-=======
-Package: describe
-Type: Package
-Title: RCT Analysis
-Version: 0.1.0
-Author: person("Sankhadeep", "Kundu", email = "sankhadeepriju@gmail.com", role = c("aut", "cre"))
-Description: This package helps to conduct RCT Analysis. It presents a variety of summary tables & figures concerning your variables.    Please ensure the data is clean & free from discrepancies.
-License: What license is it under?
-Encoding: UTF-8
-LazyData: true
-Depends:
-    R (>= 3.5.0),
-    dplyr,
-    ggplot2,
-    tidyverse,
-    haven,
-    Publish,
-    shinydashboard,
-    shiny,
-    DT,
-    readxl,
-    broom,
-    scales,
-    ggrepel,
-    plotly,
-    bslib,
-    DescTools,
-    blandr,
-    caret,
-    survival,
-    prodlim,
-    ipred,
-    recipes,
-    BlandAltmanLeh
-Imports:
-    dplyr,
-    ggplot2,
-    tidyverse,
-    haven,
-    Publish,
-    shinydashboard,
-    shiny,
-    DT,
-    readxl,
-    broom,
-    scales,
-    ggrepel,
-    plotly,
-    bslib,
-    DescTools,
-    blandr,
-    caret,
-    survival,
-    prodlim,
-    ipred,
-    recipes,
-    BlandAltmanLeh
-RoxygenNote: 7.2.3
->>>>>>> 283b3f8cf3c6c3ab8aed7b4a06cfc05f64665195
+RoxygenNote: 7.3.2
