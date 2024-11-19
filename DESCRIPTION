@@ -10,6 +10,7 @@ LazyData: true
 Depends:
     R (>= 3.5.0),
     dplyr,
+    psych,
     ggplot2,
     tidyverse,
     haven,
@@ -27,11 +28,14 @@ Depends:
     blandr,
     caret,
     survival,
+    survminer,
     prodlim,
     ipred,
-    recipes
+    recipes,
+    BlandAltmanLeh
 Imports:
     dplyr,
+    psych,
     ggplot2,
     tidyverse,
     haven,
@@ -49,7 +53,9 @@ Imports:
     blandr,
     caret,
     survival,
+    survminer,
     prodlim,
     ipred,
-    recipes
+    recipes,
+    BlandAltmanLeh
 RoxygenNote: 7.2.3
