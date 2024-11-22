@@ -15,7 +15,7 @@
 \item{var2}{(numeric vector)}
 }
 \value{
-Correlation Summary with 95% CI & Bland Altman Plot
+Correlation Summary with 95\% CI & Bland Altman Plot
 }
 \description{
 Calculates Correlation for 2 variables (eg: 2 methods of treatment) & produces a Bland Altman Plot

@@ -8,7 +8,7 @@
 #' @param var1 (numeric vector)
 #' @param var2 (numeric vector)
 #'
-#' @return Correlation Summary with 95% CI & Bland Altman Plot
+#' @return Correlation Summary with 95\% CI & Bland Altman Plot
 #'
 #' @export correlation_test
 #' @export blandaltmanplot

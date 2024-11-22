@@ -23,6 +23,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
 
   # Convert response variable to binary with selected reference
   data[[response_var]] <- relevel(as.factor(data[[response_var]]), ref = response_ref)
+  event_group <- levels(data[[response_var]])[2] # Identify the non-reference group
 
   # Identify categorical predictors and convert them to factors
   cat_columns <- predictor_vars[sapply(data[, predictor_vars], is.character)]
@@ -37,7 +38,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
     }
   }
 
-  #Check for factors with fewer than 2 levels and remove them
+  # Check for factors with fewer than 2 levels and remove them
   valid_predictors <- predictor_vars[sapply(data[, predictor_vars], function(x) {
     if (is.factor(x)) {
       nlevels(x) > 1  # Keep only factors with more than one level
@@ -64,6 +65,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
   final_table <- data.frame(Predictor = character(),
                             Category = character(),
                             Count = numeric(),
+                            Event = numeric(),
                             OR_CI = character(),
                             p.value = character(),
                             stringsAsFactors = FALSE)
@@ -73,12 +75,16 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
       reference <- levels(data[[predictor]])[1]
       category_counts <- data %>%
         group_by(.data[[predictor]]) %>%
-        summarise(n = n())
+        summarise(
+          n = n(),
+          event = sum(.data[[response_var]] == event_group)
+        )
 
       final_table <- rbind(final_table, data.frame(
         Predictor = predictor,
         Category = reference,
-        Count = category_counts[category_counts[[predictor]] == reference,]$n,
+        Count = category_counts[category_counts[[predictor]] == reference, ]$n,
+        Event = category_counts[category_counts[[predictor]] == reference, ]$event,
         OR_CI = paste0("Reference: ", reference),
         p.value = ""
       ))
@@ -90,6 +96,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
             Predictor = predictor,
             Category = category,
             Count = category_counts$n[category_counts[[predictor]] == category],
+            Event = category_counts$event[category_counts[[predictor]] == category],
             OR_CI = model_row$OR_CI,
             p.value = model_row$p.value
           ))
@@ -101,6 +108,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
         Predictor = predictor,
         Category = "Continuous",
         Count = nrow(data),
+        Event = sum(data[[response_var]] == event_group),
         OR_CI = model_row$OR_CI,
         p.value = model_row$p.value
       ))
@@ -108,10 +116,22 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
   }
 
   final_table <- final_table %>%
-    rename(Variable = Predictor, Levels = Category, N = Count, `OR (95% CI)` = OR_CI, `p value` = p.value) %>%
+    rename(Variable = Predictor, Levels = Category, N = Count, `Event` = Event, `OR (95% CI)` = OR_CI, `p value` = p.value) %>%
     mutate(Variable = ifelse(duplicated(Variable), "", Variable))
 
+  # Add a header row for the response variable and its reference level
+  header_row <- setNames(data.frame(
+    Variable = paste0("Response Variable: ", response_var),
+    Levels = paste0("Reference: ", response_ref),
+    N = NA,
+    Event = NA,
+    `OR (95% CI)` = NA,
+    `p value` = NA,
+    stringsAsFactors = FALSE
+  ), colnames(final_table))
 
+  # Prepend the header row to the final table
+  final_table <- rbind(header_row, final_table)
 
   # Calculate model performance statistics
   model_summary <- summary(model)
