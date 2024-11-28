@@ -28,12 +28,11 @@ Depends:
     blandr,
     caret,
     survival,
-    prodlim,
-    ipred,
-    recipes,
     BlandAltmanLeh,
     forestplot,
-    grid
+    grid,
+    survminer,
+    ggsurvfit
 Imports:
     dplyr,
     psych,
@@ -59,5 +58,7 @@ Imports:
     recipes,
     BlandAltmanLeh,
     forestplot,
-    grid
+    grid,
+    survminer,
+    ggsurvfit
 RoxygenNote: 7.3.2
