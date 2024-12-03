@@ -53,7 +53,7 @@ analyze_category_by_category <- function(df, categorical_col, factor_columns) {
     # Check conditions for Fisher's exact test
     if (sample_size < 30 || any(expected_frequencies < 5)) {
       # Use Fisher's exact test
-      p_value <- paste(suppressWarnings(fisher.test(contingency_table)$p.value), "✟")
+      p_value <- paste(suppressWarnings(fisher.test(contingency_table)$p.value), "#")
     } else {
       # Use Chi-square test
       p_value <- paste(suppressWarnings(chisq.test(contingency_table, correct = FALSE)$p.value), "*")

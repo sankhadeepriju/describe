@@ -2,7 +2,7 @@ Package: describe
 Type: Package
 Title: RCT Analysis
 Version: 0.1.0
-Author: person("Sankhadeep", "Kundu", email = "sankhadeepriju@gmail.com", role = c("aut", "cre"))
+Author: Sankhadeep Kundu    email = "sankhadeepriju@gmail.com", role = c("Author"))
 Description: This package helps to conduct RCT Analysis. It presents a variety of summary tables & figures concerning your variables.    Please ensure the data is clean & free from discrepancies.
 License: What license is it under?
 Encoding: UTF-8
@@ -32,7 +32,12 @@ Depends:
     forestplot,
     grid,
     survminer,
-    ggsurvfit
+    ggsurvfit,
+    forcats,
+    REDCapR,
+    httr,
+    shinyBS,
+    lubridate
 Imports:
     dplyr,
     psych,
@@ -60,5 +65,10 @@ Imports:
     forestplot,
     grid,
     survminer,
-    ggsurvfit
+    ggsurvfit,
+    forcats,
+    REDCapR,
+    httr,
+    shinyBS,
+    lubridate
 RoxygenNote: 7.3.2
