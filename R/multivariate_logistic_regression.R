@@ -59,7 +59,7 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
       odds_ratio = exp(estimate),
       conf.low = exp(confint.default(model)[, 1]),
       conf.high = exp(confint.default(model)[, 2]),
-      OR_CI = paste0(round(odds_ratio, 4), " (", round(conf.low, 4), ", ", round(conf.high, 4), ")"),
+      OR_CI = paste0(round(odds_ratio, 2), " (", round(conf.low, 2), ", ", round(conf.high, 2), ")"),
       p.value = round(p.value, 4)
     )
 
@@ -149,6 +149,56 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
     stringsAsFactors = FALSE
   )
 
+
+  #### OR FOREST PLOT ####
+  vec <- final_table$`OR (95% CI)`
+
+  OR <- rep(NaN, length(vec))
+  OR_lower <- rep(NaN, length(vec))
+  OR_upper <- rep(NaN, length(vec))
+
+  # Use regular expressions to extract the numbers only in entries containing numeric values
+  numeric_indices <- grepl("\\d", vec)
+
+  OR[numeric_indices] <- as.numeric(gsub("^(\\d+\\.\\d+).*", "\\1", vec[numeric_indices]))
+  OR_lower[numeric_indices] <- as.numeric(gsub(".*\\((\\d*\\.?\\d+),.*", "\\1", vec[numeric_indices]))
+  OR_upper[numeric_indices] <- as.numeric(gsub(".*\\(\\d*\\.?\\d+,\\s*(\\d*\\.?\\d+).*", "\\1", vec[numeric_indices]))
+
+  mod_base_data <- tibble::tibble(mean  = OR,
+                                  lower = OR_lower,
+                                  upper = OR_upper,
+                                  Variable = final_table$Variable,
+                                  Levels = final_table$Levels,
+                                  p_values = final_table$`p value`,
+                                  OR = final_table$`OR (95% CI)`)
+
+  adj_size = 0
+  or_fp <- mod_base_data |>
+    forestplot(labeltext = c(Variable, Levels, OR, p_values),
+               clip = c(0.1, 3),
+               boxsize = 0.18,
+               graphwidth = unit(9, "cm"),
+               vertices = TRUE,
+               xlab = "Odds Ratio",
+               xlog = TRUE,
+               xticks = c(0.1, 0.2, 0.5, 1, 1.5, 2, 3),
+               txt_gp = fpTxtGp(label = gpar(cex = 1.1 - adj_size),   # Data label size
+                                ticks = gpar(cex = 1.1 - adj_size),   # Tick size
+                                xlab = gpar(cex = 1.3 - adj_size)),
+               title = "Forest Plot") |>
+    fp_set_style(box = "royalblue",
+                 line = "darkblue",
+                 summary = "royalblue") |>
+    fp_add_header(Variable = c("", "Variable"),
+                  Levels = c("", "Levels"),
+                  OR = c("OR", "(95% CI)"),
+                  p_values = c("", "p-value")) |>
+    fp_decorate_graph(box = gpar(lty = 2, col = "lightgray"),
+                      graph.pos = 3) |>
+    fp_add_lines() |>
+    fp_set_zebra_style("#EFEFEF") #|> prGridPlotTitle(title = "Forest Plot", gp = gpar(fontsize = 15, fontface = "bold"))
+
   # Return both the results table and the model performance table
-  return(list(Model_Results = final_table, Model_Performance = performance_stats, model = model))
+  return(list(Model_Results = final_table, Model_Performance = performance_stats,
+              model = model, 'OR FP' = or_fp))
 }
