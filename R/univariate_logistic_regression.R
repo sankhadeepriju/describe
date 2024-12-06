@@ -8,7 +8,7 @@
 #' @param response_ref (reference level of the binary outcome)
 #' @param predictor_refs (named list of references of each categorical covariate)
 #'
-#' @return A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance. Returns the summary by building the model with outcome variable & exactly 1 predictor variable, at a time. For example, if 4 predictors are selected, a total of 4 models would be built, with each predictor entering once in a simple logistic model, Y ~ X. The summary henceforth presented would be of the 4 models built.
+#' @return A Logistic Model summary with ODDS RATIO (95\% CI), p-value & Model Performance, along with OR Forest Plot. Returns the summary by building the model with outcome variable & exactly 1 predictor variable, at a time. For example, if 4 predictors are selected, a total of 4 models would be built, with each predictor entering once in a simple logistic model, Y ~ X. The summary henceforth presented would be of the 4 models built.
 #'
 #' @export univariate_logistic_regression_summary
 #' @name univariate_logistic_regression_summary

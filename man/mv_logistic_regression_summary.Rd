@@ -15,7 +15,7 @@
 \item{predictor_refs}{(named list of references of each categorical covariate)}
 }
 \value{
-A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance. Returns the summary by building the model with outcome variable & all the predictor variables.
+A Logistic Model summary with ODDS RATIO (95\% CI), p-value & Model Performance, along with OR Forest Plot. Returns the summary by building the model with the outcome variable & all the predictor variables.
 }
 \description{
 Creates a Multivariate Logistic Regression Model summary table;   Preferred: categorical columns are formatted as factors with sub levels.

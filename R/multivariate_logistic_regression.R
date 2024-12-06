@@ -8,7 +8,7 @@
 #' @param response_ref (reference level of the binary outcome)
 #' @param predictor_refs (named list of references of each categorical covariate)
 #'
-#' @return A Logistic Model summary with ODDS RATIO (95% CI), p-value & Model Performance. Returns the summary by building the model with outcome variable & all the predictor variables.
+#' @return A Logistic Model summary with ODDS RATIO (95\% CI), p-value & Model Performance, along with OR Forest Plot. Returns the summary by building the model with the outcome variable & all the predictor variables.
 #'
 #' @export mv_logistic_regression_summary
 #' @name mv_logistic_regression_summary

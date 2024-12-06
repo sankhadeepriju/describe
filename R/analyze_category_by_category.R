@@ -82,6 +82,8 @@ analyze_category_by_category <- function(df, categorical_col, factor_columns) {
 
   summary_res$`p-value` <- original_vec
 
+  colnames(summary_res)[3:4] <- paste0(colnames(summary_res)[3:4], "<br>", "N (%)")
+
   return(summary_res)
 }
 
