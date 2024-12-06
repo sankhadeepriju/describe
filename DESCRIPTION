@@ -10,6 +10,7 @@ LazyData: true
 Depends:
     R (>= 3.5.0),
     dplyr,
+    haven,
     psych,
     ggplot2,
     tidyverse,
@@ -40,6 +41,7 @@ Depends:
     lubridate
 Imports:
     dplyr,
+    haven,
     psych,
     ggplot2,
     tidyverse,
