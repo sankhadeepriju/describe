@@ -29,6 +29,9 @@ Depends:
     blandr,
     caret,
     survival,
+    prodlim,
+    ipred,
+    recipes,
     BlandAltmanLeh,
     forestplot,
     grid,
@@ -38,7 +41,8 @@ Depends:
     REDCapR,
     httr,
     shinyBS,
-    lubridate
+    lubridate,
+    tidyr
 Imports:
     dplyr,
     haven,
@@ -72,5 +76,6 @@ Imports:
     REDCapR,
     httr,
     shinyBS,
-    lubridate
+    lubridate,
+    tidyr
 RoxygenNote: 7.3.2
