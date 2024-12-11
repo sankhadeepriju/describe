@@ -73,7 +73,8 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
       reference <- levels(data[[predictor]])[1]
       category_counts <- data %>%
         group_by(.data[[predictor]]) %>%
-        summarise(n = n(), event = sum(.data[[response_var]] == event_group))
+        summarise(n = n(), event = sum(.data[[response_var]] == event_group)) %>%
+        filter(!is.na(.data[[predictor]]))
 
       predictor_table <- rbind(predictor_table, data.frame(
         Predictor = predictor,

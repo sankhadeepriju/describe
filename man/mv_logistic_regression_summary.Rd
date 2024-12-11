@@ -12,7 +12,7 @@
 
 \item{response_ref}{(reference level of the binary outcome)}
 
-\item{predictor_refs}{(named list of references of each categorical covariate)}
+\item{predictor_refs}{(named list of reference levels of each categorical covariate)}
 }
 \value{
 A Logistic Model summary with ODDS RATIO (95\% CI), p-value & Model Performance, along with OR Forest Plot. Returns the summary by building the model with the outcome variable & all the predictor variables.
