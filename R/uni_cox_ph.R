@@ -1,6 +1,6 @@
-#' @title Multivariate Cox Proportional Hazard Regression Summary
+#' @title Univariate Cox Proportional Hazard Regression Summary
 #'
-#' @description Creates a Multivariate Cox Proportional Hazard Regression Model summary table;   Preferred: categorical columns are formatted as factors with sub levels.
+#' @description Creates a Univariate Cox Proportional Hazard Regression Model summary table;   Preferred: categorical columns are formatted as factors with sub levels.
 #'
 #' @param data A data set
 #' @param start_date_var The start date of survival. Eg: Date of Registration/Randomization/Treatment start, etc.
@@ -11,86 +11,77 @@
 #' @param predictor_vars (character vector; covariate columns' names)
 #' @param predictor_refs (named list of reference levels of each categorical covariate)
 #'
-#' @return A Logistic Model summary with ODDS RATIO (95\% CI), p-value & Model Performance, along with OR Forest Plot. Returns the summary by building the model with the outcome variable & all the predictor variables.
+#' @return A Logistic Model summary with ODDS RATIO (95\% CI), p-value, along with OR Forest Plot. Returns the summary by building the model with the outcome variable & one predictor variable at a time.
 #'
-#' @export mv_cox_ph_model_summary
-#' @name mv_cox_ph_model_summary
+#' @export uni_cox_ph_model_summary
+#' @name uni_cox_ph_model_summary
 
-mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_date_var, event_var, event_marker, predictor_vars, predictor_refs) {
+uni_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_date_var, event_var, event_marker, predictor_vars, predictor_refs) {
 
-  # Check if event_var is numeric and consists of 0 and 1 only
-  if (is.numeric(data[[event_var]]) && all(data[[event_var]] %in% c(0, 1))) {
-    data$new_event_column <- data[[event_var]]
-    message("The event variable is already numeric and contains only 0 and 1.")
-  } else {
-    # If it doesn't meet the criteria, create a new column
-    data$new_event_column <- ifelse(data[[event_var]] == event_marker, 1, 0)
-    message("New event column created with 1 for subjects matching the Event marker.")
-  }
+  all_results <- list()
 
-  # Identify categorical predictors and convert them to factors
-  cat_columns <- predictor_vars[sapply(data[, predictor_vars], function(col) {
-    is.character(col) || haven::is.labelled(col)
-  })]
-  data[cat_columns] <- lapply(data[cat_columns], function(col) {
-    # Replace "NA" (as a string) with actual NA
-    col[col == "NA"] <- NA
-    col[col == ""] <- NA
-    # Convert to factor
-    factor(col)
-  })
-
-  data <- data %>%
-    mutate(across(where(is.factor), droplevels))
-
-  # Convert predictor variables with selected reference levels
+  # Iterate over each predictor to create individual Cox PH models
   for (predictor in predictor_vars) {
-    if (is.factor(data[[predictor]])) {
-      data[[predictor]] <- relevel(data[[predictor]], ref = predictor_refs[[predictor]])
-    }
-  }
+    current_predictor_vars <- predictor
 
-  # Check for factors with fewer than 2 levels and remove them
-  valid_predictors <- predictor_vars[sapply(data[, predictor_vars], function(x) {
-    if (is.factor(x)) {
-      nlevels(x) > 1  # Keep only factors with more than one level
+    # Prepare the data and event variable
+    if (is.numeric(data[[event_var]]) && all(data[[event_var]] %in% c(0, 1))) {
+      data$new_event_column <- data[[event_var]]
     } else {
-      TRUE  # Keep non-factor variables
+      data$new_event_column <- ifelse(data[[event_var]] == event_marker, 1, 0)
     }
-  })]
 
-  # Create a new time duration column
-  data$survival_time <- ifelse(data$new_event_column == 1,
-                               as.numeric(difftime(data[[event_date_var]], data[[start_date_var]], units = "days"))/30.4375,  # From start_date to event_date for event = 1
-                               as.numeric(difftime(data[[end_date_var]], data[[start_date_var]], units = "days"))/30.4375)  # From start_date to end_date for event = 0
-  survival_obj <- Surv(time = data$survival_time, event = data$new_event_column)
+    cat_columns <- current_predictor_vars[sapply(data[, current_predictor_vars, drop = FALSE], function(col) {
+      is.character(col) || haven::is.labelled(col)
+    })]
+    data[cat_columns] <- lapply(data[cat_columns], function(col) {
+      col[col == "NA"] <- NA
+      col[col == ""] <- NA
+      factor(col)
+    })
 
-  # Create the Cox Proportional Hazards model formula
-  formula <- as.formula(paste("survival_obj ~", paste(valid_predictors, collapse = " + ")))
+    data <- data %>% mutate(across(where(is.factor), droplevels))
 
-  # Fit the Cox Proportional Hazards model
-  model <- coxph(formula, data = data)
+    for (predictor in current_predictor_vars) {
+      if (is.factor(data[[predictor]])) {
+        data[[predictor]] <- relevel(data[[predictor]], ref = predictor_refs[[predictor]])
+      }
+    }
 
-  # Extract model results using broom
-  model_results <- tidy(model) %>%
-    mutate(
-      exp.coef = exp(estimate),
-      conf.low = exp(confint(model)[, 1]),
-      conf.high = exp(confint(model)[, 2]),
-      HR_CI = paste0(round(exp.coef, 2), " (", round(conf.low, 2), ", ", round(conf.high, 2), ")"),
-      p.value = round(p.value, 4)
-    )
+    valid_predictors <- current_predictor_vars[sapply(data[, current_predictor_vars, drop = FALSE], function(x) {
+      if (is.factor(x)) {
+        nlevels(x) > 1
+      } else {
+        TRUE
+      }
+    })]
 
-  # Construct final table similar to the logistic regression function
-  final_table <- data.frame(Predictor = character(),
-                            Category = character(),
-                            Count = numeric(),
-                            Event = numeric(),
-                            HR_CI = character(),
-                            p.value = character(),
-                            stringsAsFactors = FALSE)
+    data$survival_time <- ifelse(data$new_event_column == 1,
+                                 as.numeric(difftime(data[[event_date_var]], data[[start_date_var]], units = "days")) / 30.4375,
+                                 as.numeric(difftime(data[[end_date_var]], data[[start_date_var]], units = "days")) / 30.4375)
+    survival_obj <- Surv(time = data$survival_time, event = data$new_event_column)
 
-  for (predictor in valid_predictors) {
+    formula <- as.formula(paste("survival_obj ~", paste(valid_predictors, collapse = " + ")))
+
+    model <- coxph(formula, data = data)
+
+    model_results <- tidy(model) %>%
+      mutate(
+        exp.coef = exp(estimate),
+        conf.low = exp(confint(model)[, 1]),
+        conf.high = exp(confint(model)[, 2]),
+        HR_CI = paste0(round(exp.coef, 2), " (", round(conf.low, 2), ", ", round(conf.high, 2), ")"),
+        p.value = round(p.value, 4)
+      )
+
+    final_table <- data.frame(Predictor = character(),
+                              Category = character(),
+                              Count = numeric(),
+                              Event = numeric(),
+                              HR_CI = character(),
+                              p.value = character(),
+                              stringsAsFactors = FALSE)
+
     if (is.factor(data[[predictor]])) {
       reference <- levels(data[[predictor]])[1]
       category_counts <- data %>%
@@ -134,9 +125,12 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
         p.value = model_row$p.value
       ))
     }
+
+    all_results[[predictor]] <- final_table
   }
 
-  final_table <- final_table %>%
+  # Combine all individual results into a single final table
+  final_table <- do.call(rbind, all_results) %>%
     rename(Variable = Predictor, Levels = Category, N = Count, `Event` = Event, `HR (95% CI)` = HR_CI, `p value` = p.value) %>%
     mutate(Variable = ifelse(duplicated(Variable), "", Variable))
 
@@ -151,22 +145,8 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
     stringsAsFactors = FALSE
   ), colnames(final_table))
 
-  # Prepend the header row to the final table
   final_table <- rbind(header_row, final_table)
-
-  # Calculate model performance statistics
-  model_summary <- summary(model)
-
-  performance_stats <- data.frame(
-    Statistic = c("Log-Likelihood", "AIC", "BIC", "R-squared"),
-    Value = c(
-      round(model_summary$loglik[2], 2),       # Log-likelihood
-      round(AIC(model), 2),                    # AIC value
-      round(BIC(model), 2),                    # BIC value
-      round(1 - (model_summary$loglik[2] / model_summary$loglik[1]), 4) # Pseudo R-squared
-    ),
-    stringsAsFactors = FALSE
-  )
+  rownames(final_table) <- NULL
 
   #### HR FOREST PLOT ####
   vec <- final_table$`HR (95% CI)`
@@ -175,7 +155,6 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
   HR_lower <- rep(NaN, length(vec))
   HR_upper <- rep(NaN, length(vec))
 
-  # Extract numeric values from HR CI
   numeric_indices <- grepl("\\d", vec)
 
   HR[numeric_indices] <- as.numeric(gsub("^(\\d+\\.\\d+).*", "\\1", vec[numeric_indices]))
@@ -200,8 +179,8 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
                xlab = "Hazard Ratio",
                xlog = TRUE,
                xticks = c(0.1, 0.2, 0.5, 1, 1.5, 2, 3),
-               txt_gp = fpTxtGp(label = gpar(cex = 1.1 - adj_size),   # Data label size
-                                ticks = gpar(cex = 1.1 - adj_size),   # Tick size
+               txt_gp = fpTxtGp(label = gpar(cex = 1.1 - adj_size),
+                                ticks = gpar(cex = 1.1 - adj_size),
                                 xlab = gpar(cex = 1.3 - adj_size)),
                title = "Forest Plot") |>
     fp_set_style(box = "royalblue",
@@ -216,7 +195,6 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
     fp_add_lines() |>
     fp_set_zebra_style("#EFEFEF")
 
-  # Return both the results table and the model performance table
-  return(list(Model_Results = final_table, Model_Performance = performance_stats,
-              model = model, 'HR FP' = hr_fp))
+  # Return the results
+  return(list('Final Table' = final_table, 'HR FP' = hr_fp))
 }

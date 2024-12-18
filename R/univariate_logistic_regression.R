@@ -28,7 +28,13 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
   cat_columns <- predictor_vars[sapply(data[, predictor_vars], function(col) {
     is.character(col) || haven::is.labelled(col)
     })]
-  data[, cat_columns] <- lapply(data[cat_columns], factor)
+  data[cat_columns] <- lapply(data[cat_columns], function(col) {
+    # Replace "NA" (as a string) with actual NA
+    col[col == "NA"] <- NA
+    # Convert to factor
+    factor(col)
+  })
+
   data <- data %>%
     mutate(across(where(is.factor), droplevels))
 
