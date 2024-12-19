@@ -31,6 +31,7 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
   data[cat_columns] <- lapply(data[cat_columns], function(col) {
     # Replace "NA" (as a string) with actual NA
     col[col == "NA"] <- NA
+    col[col == ""] <- NA
     # Convert to factor
     factor(col)
   })
