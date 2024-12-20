@@ -35,9 +35,15 @@ uni_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_d
       is.character(col) || haven::is.labelled(col)
     })]
     data[cat_columns] <- lapply(data[cat_columns], function(col) {
-      col[col == "NA"] <- NA
-      col[col == ""] <- NA
-      factor(col)
+      if (is.numeric(col) && haven::is.labelled(col)) {
+        # If the column is numeric but labelled, directly convert to factor
+        factor(as.character(col))
+      } else {
+        # For character columns or others, replace "NA" and empty strings, then convert to factor
+        col[col == "NA"] <- NA
+        col[col == ""] <- NA
+        factor(as.character(col))
+      }
     })
 
     data <- data %>% mutate(across(where(is.factor), droplevels))

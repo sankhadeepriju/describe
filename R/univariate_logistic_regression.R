@@ -20,6 +20,7 @@ library(broom)
 library(dplyr)
 
 univariate_logistic_regression_summary <- function(data, response_var, predictor_vars, response_ref, predictor_refs) {
+
   # Convert response variable to binary with selected reference
   data[[response_var]] <- relevel(as.factor(data[[response_var]]), ref = response_ref)
   event_group <- levels(data[[response_var]])[2]
@@ -29,11 +30,15 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
     is.character(col) || haven::is.labelled(col)
     })]
   data[cat_columns] <- lapply(data[cat_columns], function(col) {
-    # Replace "NA" (as a string) with actual NA
-    col[col == "NA"] <- NA
-    col[col == ""] <- NA
-    # Convert to factor
-    factor(col)
+    if (is.numeric(col) && haven::is.labelled(col)) {
+      # If the column is numeric but labelled, directly convert to factor
+      factor(as.character(col))
+    } else {
+      # For character columns or others, replace "NA" and empty strings, then convert to factor
+      col[col == "NA"] <- NA
+      col[col == ""] <- NA
+      factor(as.character(col))
+    }
   })
 
   data <- data %>%
@@ -44,13 +49,13 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
 
   # Loop through each predictor variable to build individual models
   for (predictor in predictor_vars) {
+    # Check if the predictor has at least 2 levels (or is valid for regression)
+    if (is.factor(data[[predictor]]) && nlevels(data[[predictor]]) < 2) next
+
     # Handle factor predictors: set reference levels if applicable
     if (is.factor(data[[predictor]])) {
       data[[predictor]] <- relevel(data[[predictor]], ref = predictor_refs[[predictor]])
     }
-
-    # Check if the predictor has at least 2 levels (or is valid for regression)
-    if (is.factor(data[[predictor]]) && nlevels(data[[predictor]]) < 2) next
 
     # Create formula and fit logistic regression model
     formula <- as.formula(paste(response_var, "~", predictor))

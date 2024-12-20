@@ -33,18 +33,22 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
     is.character(col) || haven::is.labelled(col)
   })]
   data[cat_columns] <- lapply(data[cat_columns], function(col) {
-    # Replace "NA" (as a string) with actual NA
-    col[col == "NA"] <- NA
-    col[col == ""] <- NA
-    # Convert to factor
-    factor(col)
+    if (is.numeric(col) && haven::is.labelled(col)) {
+      # If the column is numeric but labelled, directly convert to factor
+      factor(as.character(col))
+    } else {
+      # For character columns or others, replace "NA" and empty strings, then convert to factor
+      col[col == "NA"] <- NA
+      col[col == ""] <- NA
+      factor(as.character(col))
+    }
   })
 
   data <- data %>%
     mutate(across(where(is.factor), droplevels))
 
   # Convert predictor variables with selected reference levels
-  for (predictor in predictor_vars) {
+  for (predictor in cat_columns) {
     if (is.factor(data[[predictor]])) {
       data[[predictor]] <- relevel(data[[predictor]], ref = predictor_refs[[predictor]])
     }
