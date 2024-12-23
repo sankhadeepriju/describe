@@ -42,7 +42,8 @@ Depends:
     httr,
     shinyBS,
     lubridate,
-    tidyr
+    tidyr,
+    testthat
 Imports:
     dplyr,
     haven,
@@ -77,5 +78,6 @@ Imports:
     httr,
     shinyBS,
     lubridate,
-    tidyr
+    tidyr,
+    testthat
 RoxygenNote: 7.3.2

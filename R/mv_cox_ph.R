@@ -101,7 +101,7 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
         group_by(.data[[predictor]]) %>%
         summarise(
           n = n(),
-          event = sum(.data[[event_var]] == 1)
+          event = sum(.data[["new_event_column"]] == 1)
         ) %>%
         filter(!is.na(.data[[predictor]]))
 
@@ -133,7 +133,7 @@ mv_cox_ph_model_summary <- function(data, start_date_var, event_date_var, end_da
         Predictor = predictor,
         Category = "Continuous",
         Count = nrow(data),
-        Event = sum(data[[event_var]] == 1),
+        Event = sum(data[["new_event_column"]] == 1),
         HR_CI = model_row$HR_CI,
         p.value = model_row$p.value
       ))
