@@ -21,6 +21,12 @@ library(dplyr)
 
 mv_logistic_regression_summary <- function(data, response_var, predictor_vars, response_ref, predictor_refs) {
 
+  # Replace spaces with underscores in column names
+  colnames(data) <- gsub(" ", "_", colnames(data))
+  predictor_vars <- gsub(" ", "_", predictor_vars)
+  response_var <- gsub(" ", "_", response_var)
+  names(predictor_refs) <- gsub(" ", "_", names(predictor_refs))
+  
   # Convert response variable to binary with selected reference
   response_ref <- as.character(response_ref)  # Ensure it's treated as a factor level
   data[[response_var]] <- relevel(as.factor(data[[response_var]]), ref = response_ref)
@@ -61,12 +67,6 @@ mv_logistic_regression_summary <- function(data, response_var, predictor_vars, r
     }
   })]
   
-  response_var <- if (!make.names(response_var) == response_var) paste0("`", response_var, "`") else response_var
-  # Surround variable names with backticks if they are invalid
-  valid_predictors <- sapply(valid_predictors, function(x) {
-    if (!make.names(x) == x) paste0("`", x, "`") else x
-  })
-
   # Create formula and fit logistic regression model
   formula <- as.formula(paste(response_var, "~", paste(valid_predictors, collapse = " + ")))
   model <- glm(formula, data = data, family = binomial())
