@@ -43,7 +43,8 @@ Depends:
     shinyBS,
     lubridate,
     tidyr,
-    testthat
+    testthat,
+    stringr
 Imports:
     dplyr,
     haven,
@@ -79,5 +80,6 @@ Imports:
     shinyBS,
     lubridate,
     tidyr,
-    testthat
+    testthat,
+    stringr
 RoxygenNote: 7.3.2

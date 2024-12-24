@@ -22,6 +22,7 @@ library(dplyr)
 univariate_logistic_regression_summary <- function(data, response_var, predictor_vars, response_ref, predictor_refs) {
 
   # Convert response variable to binary with selected reference
+  response_ref <- as.character(response_ref)  # Ensure it's treated as a factor level
   data[[response_var]] <- relevel(as.factor(data[[response_var]]), ref = response_ref)
   event_group <- levels(data[[response_var]])[2]
 
@@ -56,7 +57,10 @@ univariate_logistic_regression_summary <- function(data, response_var, predictor
     if (is.factor(data[[predictor]])) {
       data[[predictor]] <- relevel(data[[predictor]], ref = predictor_refs[[predictor]])
     }
-
+    
+    response_var <- if (!make.names(response_var) == response_var) paste0("`", response_var, "`") else response_var
+    predictor <- if (!make.names(predictor) == predictor) paste0("`", predictor, "`") else predictor
+    
     # Create formula and fit logistic regression model
     formula <- as.formula(paste(response_var, "~", predictor))
     model <- glm(formula, data = data, family = binomial())
