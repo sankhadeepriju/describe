@@ -4,14 +4,14 @@
 \alias{analyze_numeric_by_category}
 \title{Numerical Analysis by Grouping}
 \usage{
-analyze_numeric_by_category(df, categorical_col, numeric_cols)
+analyze_numeric_by_category(data, categorical_col, numeric_cols)
 }
 \arguments{
-\item{df}{A data set}
-
 \item{categorical_col}{(character; column name) Categorical or Grouping column to compare}
 
 \item{numeric_cols}{(character vector of column names) Other numerical columns to create summary table of the variable means copared with respect to the previous grouping column}
+
+\item{df}{A data set}
 }
 \value{
 A summary table

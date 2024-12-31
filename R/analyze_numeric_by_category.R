@@ -14,7 +14,10 @@
 
 
 # Define the function
-analyze_numeric_by_category <- function(df, categorical_col, numeric_cols) {
+analyze_numeric_by_category <- function(data, categorical_col, numeric_cols) {
+
+  df <- data %>%
+    mutate(!!sym(categorical_col) := as.character(!!sym(categorical_col)))
   # Check if the categorical column exists
   if (!categorical_col %in% names(df)) {
     stop("Categorical column not found in dataframe.")
@@ -53,6 +56,9 @@ analyze_numeric_by_category <- function(df, categorical_col, numeric_cols) {
 
       if (n_val > 3 && n_val <= 5000) {
         normality_test <- shapiro.test(cat_vals)
+        normality_pvalues[[val]] <- normality_test$p.value
+      } else if (n_val > 5000) {
+        normality_test <- nortest::ad.test(cat_vals)
         normality_pvalues[[val]] <- normality_test$p.value
       } else {
         normality_pvalues[[val]] <- NA
@@ -159,7 +165,3 @@ analyze_numeric_by_category <- function(df, categorical_col, numeric_cols) {
 
   return(final_results)
 }
-
-#dff <- readxl::read_excel("R/descriptives_data.xlsx")
-#num_cols = names(dff)[sapply(dff, is.numeric)][-c(6,7,8,20,21)]    ## 6,7,8,20,21
-#kk <- analyze_numeric_by_category(df = dff, categorical_col = "Arm_of_randomization", numeric_cols = num_cols)
