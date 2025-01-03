@@ -120,7 +120,7 @@ analyze_numeric_by_category <- function(data, categorical_col, numeric_cols) {
       paste(overall_data$median, "(", overall_data$Q1, ", ", overall_data$Q3, ")")
     }
 
-    summary$p_value <- round(p_value, 3)
+    summary$p_value <- round(p_value, 4)
 
     # Check for missing values and add an extra row if needed
     missing_values <- df %>%
