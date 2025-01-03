@@ -1,7 +1,7 @@
 Package: describe
 Type: Package
 Title: RCT Analysis
-Version: 1.0.3
+Version: 1.0.5
 Author: Sankhadeep Kundu    email = "sankhadeepriju@gmail.com", role = c("Author"), github = "https://github.com/sankhadeepriju")
 Description: This package helps to conduct RCT Analysis. It presents a variety of summary tables & figures concerning your variables.    Please ensure the data is clean & free from discrepancies.
 License: What license is it under?

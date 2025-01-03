@@ -3,16 +3,16 @@
 #' @description Calculates Correlation for 2 variables (eg: 2 methods of treatment) & produces a Bland Altman Plot
 #'
 #' @param data A data set
-#' @param v1 (character; numeric column's name)
-#' @param v2 (character; numeric column's name)
-#' @param var1 (numeric vector)
-#' @param var2 (numeric vector)
+#' @param v1 (character; numeric column's name) To calculate correlation & conduct appropriate test for the same.
+#' @param v2 (character; numeric column's name) To calculate correlation & conduct appropriate test for the same.
+#' @param var1 (numeric vector) To plot the Bland Altman plot by calculating the means and differences of the 2 variables chosen.
+#' @param var2 (numeric vector) To plot the Bland Altman plot by calculating the means and differences of the 2 variables chosen.
 #'
-#' @return Correlation Summary with 95\% CI & Bland Altman Plot
+#' @return Correlation Summary with 95\% CI (use function correlation_test) & Bland Altman Plot (use function blandaltmanplot)
 #'
 #' @export correlation_test
 #' @export blandaltmanplot
-#' @name correlation_test_bland_altman
+#' @name correlation_test_and_blandaltmanplot
 
 
 
